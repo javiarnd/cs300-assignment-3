@@ -1,4 +1,4 @@
-
+//This function validates a record object to ensure it has the required properties and that they are of the correct type for the minutes one. It returns an object that shows the record is valid and also gives the errors found. Doesnt change input.
 export function validateRecord(record) {
     const errors = [];
 
@@ -27,6 +27,7 @@ export function validateRecord(record) {
     };
 }
 
+//This function 'normalizes' a record object by trimming whitespace and fixing capitalization for the title, creator, and category properties. It returns a new object with the cleaned up values. Doesnt change input.
 export function normalizeRecord(record) {
     const normalizedRecord = { ...record };
 
@@ -45,6 +46,7 @@ export function normalizeRecord(record) {
     return normalizedRecord;
 }
 
+//This function filters an array based on a provided condition. It returns a new array containing only the records that meet the condition. The condition is cleaned up first. Doesnt change input.
 export function filterRecords(records, condition) {
     return records.filter(condition);
 }
@@ -58,6 +60,7 @@ export function searchRecords(records, query) {
     );
 }
 
+//This function sorts an array based on a specified property. It returns a new array with the records sorted by the given property. If two records have the same value for the property, they are sorted by title as a tie-breaker. Doesnt change input.
 export function sortRecords(records, property) {
     const sortedRecords = [...records];
     sortedRecords.sort((a, b) => {
@@ -78,6 +81,7 @@ export function sortRecords(records, property) {
     return sortedRecords;
 }
 
+//This function summarizes an array of records by calculating the count, total minutes, and average minutes. It returns an object containing these summary statistics. Doesnt change input.
 export function summarizeRecords(records) {
     if (records.length === 0) {
         return { count: 0, totalMinutes: 0, averageMinutes: 0};
@@ -90,6 +94,7 @@ export function summarizeRecords(records) {
     return { count, totalMinutes, averageMinutes };
 }
 
+//This function builds a report based on a query. It filters the records based on the query, sorts the filtered records by title, and summarizes the sorted records. It returns an object containing the filtered records, sorted records, and summary (the stats). Doesnt change input.
 export function buildReport(records, query) {
     const filteredRecords = searchRecords(records, query);
     const sortedRecords = sortRecords(filteredRecords, "title");
