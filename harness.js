@@ -102,3 +102,8 @@ const expectedIncomplete = {
     errors: ["Missing creator", "Missing category", "Invalid minutes"]
 };
 check("validateRecord catches multiple missing fields in incomplete records", expectedIncomplete, incompleteValidation);
+
+const gamesBeforeSort = JSON.stringify(games);
+sortRecords(games, "minutes");
+const gamesAfterSort = JSON.stringify(games);
+check("sortRecords does not mutate original array", gamesBeforeSort, gamesAfterSort);
