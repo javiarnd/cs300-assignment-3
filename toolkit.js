@@ -1,18 +1,3 @@
-// Assignment 3: JavaScript Data Toolkit
-//
-// Write and export your seven functions in this file. You may use these names:
-//
-//   validateRecord(record)            returns useful error information for one record
-//   normalizeRecord(record)           returns a cleaned copy; never changes the original record
-//   filterRecords(records, condition) returns the records that match a condition you pass in
-//   searchRecords(records, query)     matches 2+ properties, ignoring capitalization
-//   sortRecords(records, property)    returns a new sorted array; never changes the original array
-//   summarizeRecords(records)         returns a summary, such as a count, total, or average
-//   buildReport(records, query)       combines at least two of the functions above
-//
-// Above each function, write a short comment: what it takes, what it returns,
-// and whether it changes its input. Decide your tie rule for equal values
-// and the shape of your validation errors before you write the code.
 
 export function validateRecord(record) {
     const errors = [];
@@ -62,4 +47,56 @@ export function normalizeRecord(record) {
 
 export function filterRecords(records, condition) {
     return records.filter(condition);
+}
+
+export function searchRecords(records, query) {
+    const cleanQuery = query.trim().toLowerCase();
+    return records.filter(record => 
+        (record.title && record.title.toLowerCase().includes(cleanQuery)) ||
+        (record.creator && record.creator.toLowerCase().includes(cleanQuery)) ||
+        (record.category && record.category.toLowerCase().includes(cleanQuery))
+    );
+}
+
+export function sortRecords(records, property) {
+    const sortedRecords = [...records];
+    sortedRecords.sort((a, b) => {
+        const valA = a[property];
+        const valB = b[property];
+
+        if (typeof valA === "string" && typeof valB === "string") {
+            return valA.localeCompare(valB);
+        } else if (typeof valA === "number" && typeof valB === "number") {
+            if (valA === valB) {
+                return a.title.localeCompare(b.title); // Tie rule.
+            }
+            return valA - valB;
+        } else {
+            return 0; //If titles are the same also just retun 0, default js sort.
+        }
+    });
+    return sortedRecords;
+}
+
+export function summarizeRecords(records) {
+    if (records.length === 0) {
+        return { count: 0, totalMinutes: 0, averageMinutes: 0};
+    }
+
+    const count = records.length;
+    const totalMinutes = records.reduce((sum, record) => sum + (typeof record.minutes === 'number' ? record.minutes : 0), 0);
+    const averageMinutes = totalMinutes / count;
+    
+    return { count, totalMinutes, averageMinutes };
+}
+
+export function buildReport(records, query) {
+    const filteredRecords = searchRecords(records, query);
+    const sortedRecords = sortRecords(filteredRecords, "title");
+    const summarizedRecords = summarizeRecords(sortedRecords);
+    return { 
+        query: filteredRecords,        
+        summary: sortedRecords,   
+        result: summarizedRecords
+    };
 }
