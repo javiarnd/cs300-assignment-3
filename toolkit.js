@@ -42,4 +42,24 @@ export function validateRecord(record) {
     };
 }
 
+export function normalizeRecord(record) {
+    const normalizedRecord = { ...record };
 
+    if (normalizedRecord.title) {
+        normalizedRecord.title = normalizedRecord.title.trim().toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    }
+
+    if (normalizedRecord.creator) {
+        normalizedRecord.creator = normalizedRecord.creator.trim().toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    }
+
+    if (normalizedRecord.category) {
+        normalizedRecord.category = normalizedRecord.category.trim().toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    }
+
+    return normalizedRecord;
+}
+
+export function filterRecords(records, condition) {
+    return records.filter(condition);
+}

@@ -1,4 +1,4 @@
-import { validateRecord } from "./toolkit.js";
+import { validateRecord, normalizeRecord, filterRecords } from "./toolkit.js";
 
 function check(name, expected, actual) {
  const result = JSON.stringify(actual) === JSON.stringify(expected) ? "PASS" :
@@ -23,5 +23,21 @@ const validationResult = validateRecord(games[0]);
 check("validateRecord with valid record", { valid: true, errors: [] }, validationResult);
 
 const invalidResult = validateRecord(boundaryRecords[1]);
-check("validateRecord with invalid invalid minutes type", { valid: false, errors: ["Invalid Minutes"] }, invalidResult);
+check("validateRecord with invalid invalid minutes type", { valid: false, errors: ["Invalid minutes"] }, invalidResult);
+
+const expectedCleanRecord = {
+    "id": "trim-case",
+    "title": "Robot Garden",
+    "creator": "Mina Reed",
+    "category": "Science Fiction",
+    "minutes": 240
+};
+
+const normalizedRecord = normalizeRecord(boundaryRecords[2]);
+check("normalizeRecord cleans whitespace and fixes capitalization", expectedCleanRecord, normalizedRecord);
+
+
+const categoryCondition = record => record.category === "Puzzle";
+const filteredResult = filterRecords(games, categoryCondition);
+check("filterRecords filters by category", games.filter(game => game.category === "Puzzle"), filteredResult);
 
