@@ -19,6 +19,12 @@ const games = await gamesResponse.json();
 const boundaryResponse = await fetch("data/boundary-records.json");
 const boundaryRecords = await boundaryResponse.json();
 
+const emptyResponse = await fetch("data/empty.json");
+const emptyRecords = await emptyResponse.json();
+
+const incompleteResponse = await fetch("data/incomplete.json");
+const incompleteRecords = await incompleteResponse.json();
+
 const validationResult = validateRecord(games[0]);
 check("validateRecord with valid record", { valid: true, errors: [] }, validationResult);
 
@@ -83,3 +89,16 @@ const expectedSixtyMinuteGamesOrder = [
 ];
 
 check("sortRecords equal min games sort by title instead", expectedSixtyMinuteGamesOrder, sortRecords(sixtyMinuteGames, "minutes").map(game => game.title));
+
+const emptySummary = summarizeRecords(emptyRecords);
+check("summarizeRecords handles empty json", { count: 0, totalMinutes: 0, averageMinutes: 0 }, emptySummary);
+
+const emptySearch = searchRecords(emptyRecords, "robot");
+check("searchRecords handles empty json", [], emptySearch);
+
+const incompleteValidation = validateRecord(incompleteRecords[0]);
+const expectedIncomplete = {
+    valid: false,
+    errors: ["Missing creator", "Missing category", "Invalid minutes"]
+};
+check("validateRecord catches multiple missing fields in incomplete records", expectedIncomplete, incompleteValidation);

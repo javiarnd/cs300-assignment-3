@@ -7,14 +7,13 @@ Seven small JavaScript functions that check, clean, filter, search, sort, and su
 - `harness.js`: Named test cases.
 - `data/`: `games.json` and three test files for edge cases (`boundary-records.json`, `empty.json`, `incomplete.json`).
 
-## Game Collection
+## Games Collection
 
 - Who uses it: Ren, a hobby-club organizer choosing fictional games.
 - Goal: Find games by title or creator and compare estimated playing time.
 - Data: [Eight fictional games](data/games.json).
 
 - Javier Aranda
-- Games Collection
 - https://javiarnd.github.io/cs300-assignment-3/
 
 
