@@ -13,3 +13,33 @@
 // Above each function, write a short comment: what it takes, what it returns,
 // and whether it changes its input. Decide your tie rule for equal values
 // and the shape of your validation errors before you write the code.
+
+export function validateRecord(record) {
+    const errors = [];
+
+    if(!record.id){
+        errors.push("Missing id");
+    }
+
+    if(!record.title){
+        errors.push("Missing title");
+    }
+
+    if(!record.creator){
+        errors.push("Missing creator");
+    }
+
+    if(!record.category){
+        errors.push("Missing category");
+    }
+
+    if(typeof record.minutes !== 'number' || record.minutes < 0){
+        errors.push("Invalid minutes");
+    }
+
+    return{
+        valid: errors.length === 0, errors: errors
+    };
+}
+
+
