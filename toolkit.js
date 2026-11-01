@@ -100,6 +100,7 @@ export function buildReport(records, query) {
     const sortedRecords = sortRecords(filteredRecords, "title");
     const summarizedRecords = summarizeRecords(sortedRecords);
     return { 
+        contains: query,
         query: filteredRecords,        
         summary: sortedRecords,   
         result: summarizedRecords

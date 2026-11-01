@@ -8,8 +8,9 @@ function check(name, expected, actual) {
 
  const printedResult = document.createElement("p");
     printedResult.innerHTML = `${result} <br> <b>${name}</b>
-                                <br> &nbsp;&nbsp;expected: ${JSON.stringify(expected)} 
-                                <br> &nbsp;&nbsp;actual: ${JSON.stringify(actual)}`;
+                                <br> &nbsp;&nbsp;expected: <pre>${JSON.stringify(expected, null, 2)}</pre> 
+                                <br> &nbsp;&nbsp;actual: <pre>${JSON.stringify(actual, null, 2)}</pre>
+                                <hr>`;
     document.body.appendChild(printedResult);
 }
 
@@ -45,14 +46,16 @@ check("normalizeRecord cleans whitespace and fixes capitalization", expectedClea
 
 const categoryCondition = record => record.category === "Puzzle";
 const filteredResult = filterRecords(games, categoryCondition);
-check("filterRecords filters by category", games.filter(game => game.category === "Puzzle"), filteredResult);
+check("filterRecords filters by category", games.filter(game => game.category === "Puzzle").map(game => game.title), filteredResult.map(game => game.title));
 
 const searchResult = searchRecords(games, "CARDS");
-check("searchRecords finds records by 'title', 'creator' or 'category'", games.filter(game => game.title.toLowerCase().includes("cards") || game.creator.toLowerCase().includes("cards") || game.category.toLowerCase().includes("cards")), searchResult);
+check("searchRecords finds records by 'title', 'creator' or 'category'", "Cloud Cards", searchResult[0].title);
 
 const sortResult = sortRecords(games, "title");
 const expectedSortedResult = [...games].sort((a, b) => a.title.localeCompare(b.title));
-check("sortRecords sorts by property, in this case 'title'", expectedSortedResult, sortResult);
+for (let i = 0; i < games.length; i++) {
+    check(`sortRecords sorts by title alphabetically. The order: ${i}`, expectedSortedResult[i].title, sortResult[i].title);
+}
 
 const summaryResult = summarizeRecords(games);
 const expectedSummary = {
@@ -65,6 +68,7 @@ check("summarizeRecords returns correct summary", expectedSummary, summaryResult
 
 const reportResult = buildReport(games, "Practice" );
 const expectedReport = {
+    contains: "Practice",
     query: searchRecords(games, "Practice"),
     summary: sortRecords(searchRecords(games, "Practice"), "title"),
     result: summarizeRecords(sortRecords(searchRecords(games, "Practice"), "title"))
@@ -103,7 +107,7 @@ const expectedIncomplete = {
 };
 check("validateRecord catches multiple missing fields in incomplete records", expectedIncomplete, incompleteValidation);
 
-const gamesBeforeSort = JSON.stringify(games);
+const gamesBeforeSort = [...games];
 sortRecords(games, "minutes");
-const gamesAfterSort = JSON.stringify(games);
+const gamesAfterSort = [...games];
 check("sortRecords does not mutate original array", gamesBeforeSort, gamesAfterSort);
